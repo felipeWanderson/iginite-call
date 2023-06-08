@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { Container, Hero, Preview } from './styles'
 
 import previewImage from '../../assets/calendar-home.png'
-import { ClaimUserNameForm } from './components'
+import { ClaimUserNameForm } from './components/ClaimUsernameForm'
 
 export default function Home() {
   return (
