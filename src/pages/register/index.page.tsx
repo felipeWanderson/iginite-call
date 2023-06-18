@@ -6,8 +6,9 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
+import { api } from '@/lib/axios'
 
-const registerUsernameFormSchema = z.object({
+const registerFormSchema = z.object({
   username: z
     .string()
     .min(3, { message: 'precisa ter pelo menos 3 letras' })
@@ -18,7 +19,7 @@ const registerUsernameFormSchema = z.object({
   name: z.string().min(3, { message: 'Informe seu nome' }),
 })
 
-type ClaimUsernameFormData = z.infer<typeof registerUsernameFormSchema>
+type RegisterFormData = z.infer<typeof registerFormSchema>
 
 export default function Register() {
   const {
@@ -26,8 +27,8 @@ export default function Register() {
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<ClaimUsernameFormData>({
-    resolver: zodResolver(registerUsernameFormSchema),
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerFormSchema),
   })
 
   const router = useRouter()
@@ -38,8 +39,15 @@ export default function Register() {
     }
   }, [router.query?.username, setValue])
 
-  async function handleSubmitRegister(data: ClaimUsernameFormData) {
-    console.log(data)
+  async function handleRegister(data: RegisterFormData) {
+    try {
+      await api.post('/users', {
+        name: data.name,
+        username: data.username,
+      })
+    } catch (err) {
+      console.log(err)
+    }
   }
   return (
     <Container>
@@ -53,7 +61,7 @@ export default function Register() {
         <MultiStep size={4} currentStep={1} />
       </Header>
 
-      <Form as="form" onSubmit={handleSubmit(handleSubmitRegister)}>
+      <Form as="form" onSubmit={handleSubmit(handleRegister)}>
         <label>
           <Text size="sm">Nome de usuário</Text>
           <TextInput
