@@ -1,9 +1,14 @@
 import { Button, Heading, MultiStep, Text } from '@ignite-ui/react'
+import { signIn, useSession } from 'next-auth/react'
+
 import { Container, Header } from '../styles'
 import { ArrowRight } from 'phosphor-react'
 import { ConnectBox, ConnectItem } from './styles'
 
 export default function ConnectCalendar() {
+  const session = useSession()
+
+  console.log({ session: session.data })
   return (
     <Container>
       <Header>
@@ -18,7 +23,11 @@ export default function ConnectCalendar() {
         <ConnectBox>
           <ConnectItem>
             <Text>Google Agenda</Text>
-            <Button variant="secondary" size="sm">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => signIn('google')}
+            >
               Conectar
               <ArrowRight />
             </Button>
